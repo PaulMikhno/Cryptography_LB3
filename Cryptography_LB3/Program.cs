@@ -23,6 +23,7 @@ namespace Cryptography_LB3
                 if (!isValid)
                 {
                     Console.WriteLine("Ivalid input!");
+                    continue;
                 }
 
                 switch ((Actions)action)
@@ -36,6 +37,16 @@ namespace Cryptography_LB3
                         break;
                     case Actions.DecryptTripleDES:
                         ProcessDecryptTripleDESAction();
+                        break;
+                    case Actions.RSACng:
+                        Console.WriteLine("===============================================================================");
+                        Console.WriteLine("Please enter value that will be encrypted:");
+                        var rsaMessage = Console.ReadLine();
+                        Console.WriteLine("Please enter password");
+                        var password = Console.ReadLine();
+                        var bytes = RSACngService.Encrypt(rsaMessage, password);
+                        RSACngService.Decrypt(bytes, password);
+                        Console.WriteLine("===============================================================================\n");
                         break;
                     case Actions.Exit:
                         isExit = true;

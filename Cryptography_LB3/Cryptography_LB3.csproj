@@ -46,6 +46,7 @@
     <Compile Include="Actions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RSACngService.cs" />
     <Compile Include="TripleDesService.cs" />
   </ItemGroup>
   <ItemGroup>

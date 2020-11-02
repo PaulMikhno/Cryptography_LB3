@@ -21,14 +21,11 @@ namespace Cryptography_LB3
                     byte[] encrypted = Encrypt(raw, tdes.Key, tdes.IV);
                     // Print encrypted string  
                     Console.WriteLine($"Encrypted data: {System.Text.Encoding.UTF8.GetString(encrypted)}");
-                    // Decrypt the bytes to a string.
-                    string decrypted = Decrypt(encrypted, tdes.Key, tdes.IV);
-
-                    Console.WriteLine($"Decrypted data: {decrypted}");
-
+#if DEBUG
                     File.WriteAllBytes(@"EncryptedTripleDES.bin", encrypted);
                     File.WriteAllBytes(@"KeyTripleDES.bin", tdes.Key);
                     File.WriteAllBytes(@"VectorTripleDES.bin", tdes.IV);
+#endif
                 }
             }
             catch (Exception exp)
