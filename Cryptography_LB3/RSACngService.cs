@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -11,12 +12,12 @@ namespace Cryptography_LB3
     {
         static byte[] privateKey;
         static byte[] publicKey;
-        private static byte[] encrypted;
-        private static byte[] decrypted;
-        private static byte[] signed;
+        public const string PrivateKeyName = "PrivateKey";
+        public const string PublicKeyName = "PublicKey";
 
-        public static void Encript(byte[] data)
+        public static Dictionary<string, byte[]> GenerateKeys(string folder = "")
         {
+            var keysDictionary = new Dictionary<string, byte[]>();
             try
             {
                 CngKey cngKey;
@@ -66,37 +67,21 @@ namespace Cryptography_LB3
                 Console.WriteLine("\nPrivate key - length = " + privateKey.Length + "\n" + prvResult + "\n");
                 Console.WriteLine("\nPublic key - length = " + publicKey.Length + "\n" + pubResult + "\n");
 
-                // Encrypt / decrypt
+                //Save keys
+                File.WriteAllBytes($"{folder}PrivateKey.bin", privateKey);
+                File.WriteAllBytes($"{folder}PublicKey.bin", publicKey);
 
-                encrypted = Encrypt(publicKey, data);
+                keysDictionary.Add(PrivateKeyName, privateKey);
+                keysDictionary.Add(PublicKeyName, publicKey);
 
-                decrypted = Decrypt(privateKey, encrypted);
-
-                bool result = ByteArrayCompare(data, decrypted);
-
-                if (result)
-                    Console.WriteLine("Encrypt / decrypt works");
-                else
-                    Console.WriteLine("Encrypt / decrypt fails");
-
-                // Signing
-
-                signed = Sign512(data, privateKey);
-
-                bool result1 = VerifySignature512(data, signed, publicKey);
-
-                if (result1)
-                    Console.WriteLine("Signing works");
-                else
-                    Console.WriteLine("Signing fails");
+                Console.WriteLine("Keys saved");
             }
-
             catch (Exception e)
             {
                 Console.WriteLine("Exception " + e.Message);
             }
 
-            Console.ReadLine();
+            return keysDictionary;
         }
 
         static bool ByteArrayCompare(byte[] a1, byte[] a2)
@@ -136,6 +121,8 @@ namespace Cryptography_LB3
             CngKey key = CngKey.Import(publicKey, CngKeyBlobFormat.GenericPublicBlob);
             RSACng crypto = new RSACng(key);
             var result = crypto.Encrypt(data, RSAEncryptionPadding.OaepSHA512);
+
+            File.WriteAllBytes(@"EnryptedFile.bin", result);
             return result;
         }
         public static byte[] Decrypt(byte[] privateKey, byte[] data)

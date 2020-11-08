@@ -10,10 +10,11 @@ namespace Cryptography_LB3
     {
         Uknown = 0,
         EncryptTripleDES = 1,
-        RSACng = 2,
+        RSACngEncrypt = 2,
         DSA = 3,
         SHA384Managed = 4,
         DecryptTripleDES = 5,
-        Exit = 6
+        RSACngDecrypt = 6,
+        Exit = 7
     }
 }

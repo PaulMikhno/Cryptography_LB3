@@ -15,7 +15,7 @@ namespace Cryptography_LB3
                 bool isExit = false;
 
                 Console.WriteLine("Please select an action:");
-                Console.WriteLine("1) Encrypt using TripleDES;\n2) Encrypt using RSACng;\n3) Create DSA Sign;\n4) Get SHA384Managed Hash;\n5) Decrypt TripleDES file using key file\n6) Exit");
+                Console.WriteLine("1) Encrypt using TripleDES;\n2) Encrypt using RSACng;\n3) Create DSA Sign;\n4) Get SHA384Managed Hash;\n5) Decrypt TripleDES file using key file\n6) Decrypt using RSACng \n7) Exit");
                 var selected = Console.ReadLine();
                 int action;
                 var isValid = int.TryParse(selected, out action);
@@ -38,14 +38,31 @@ namespace Cryptography_LB3
                     case Actions.DecryptTripleDES:
                         ProcessDecryptTripleDESAction();
                         break;
-                    case Actions.RSACng:
+                    case Actions.RSACngEncrypt:
                         Console.WriteLine("===============================================================================");
-                        Console.WriteLine("Please enter value that will be encrypted:");
-                        var rsaMessage = Console.ReadLine();
-                        Console.WriteLine("Please enter password");
-                        var password = Console.ReadLine();
-                        var bytes = RSACngService.Encrypt(rsaMessage, password);
-                        RSACngService.Decrypt(bytes, password);
+                        Console.WriteLine("Please enter path to file that will be encrypted:");
+                        var encryptFilePath = Console.ReadLine();
+                        var encriptedFileBytes = File.ReadAllBytes(encryptFilePath);
+                        var keys = RSACngService.GenerateKeys();
+                        var encrypted = RSACngService.Encrypt(keys[RSACngService.PublicKeyName], encriptedFileBytes);
+
+                        Console.WriteLine($"Encrypted data: {System.Text.Encoding.UTF8.GetString(encrypted)}");
+                        Console.WriteLine("===============================================================================\n");
+                        break;
+                    case Actions.RSACngDecrypt:
+                        Console.WriteLine("===============================================================================");
+                        Console.WriteLine("Please enter path to file that will be decrypted:");
+                        var decryptFilePath = Console.ReadLine();
+                        var decryptFileBytes = File.ReadAllBytes(decryptFilePath);
+                        Console.WriteLine($"Encrypted data: {System.Text.Encoding.UTF8.GetString(decryptFileBytes)}");
+
+                        Console.WriteLine("Please enter path to file with private key:");
+                        var privateKeyFilePath = Console.ReadLine();
+                        var privateKeyFileBytes = File.ReadAllBytes(privateKeyFilePath);
+
+                        var decrypted = RSACngService.Decrypt(privateKeyFileBytes, decryptFileBytes);
+
+                        Console.WriteLine($"Decrypted data: {System.Text.Encoding.UTF8.GetString(decrypted)}");
                         Console.WriteLine("===============================================================================\n");
                         break;
                     case Actions.Exit:
