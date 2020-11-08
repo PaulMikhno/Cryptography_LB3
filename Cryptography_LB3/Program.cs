@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using System.Threading.Tasks;
+using Cryptography_LB3.Services;
+using System.Security.Cryptography;
 
 namespace Cryptography_LB3
 {
@@ -64,6 +66,24 @@ namespace Cryptography_LB3
 
                         Console.WriteLine($"Decrypted data: {System.Text.Encoding.UTF8.GetString(decrypted)}");
                         Console.WriteLine("===============================================================================\n");
+                        break;
+                    case Actions.DSA:
+                        Console.WriteLine("===============================================================================");
+                        Console.WriteLine("Please enter path to file:");
+                        var signatureFilePath = Console.ReadLine();
+                        var signatureFileBytes = File.ReadAllBytes(signatureFilePath);
+                        var service = new DSACngService();
+                        var signature = service.CreateSignature(signatureFileBytes);
+                        Console.WriteLine($"Signature: {System.Text.Encoding.UTF8.GetString(signature)}");
+                        break;
+                    case Actions.SHA384Managed:
+                        Console.WriteLine("===============================================================================");
+                        Console.WriteLine("Please enter path to file:");
+                        var hashFilePath = Console.ReadLine();
+                        var hashFileBytes = File.ReadAllBytes(hashFilePath);
+                        SHA384 shaM = new SHA384Managed();
+                        var result = shaM.ComputeHash(hashFileBytes);
+                        Console.WriteLine($"File SHA384Managed Hash: {System.Text.Encoding.UTF8.GetString(result)}");
                         break;
                     case Actions.Exit:
                         isExit = true;
